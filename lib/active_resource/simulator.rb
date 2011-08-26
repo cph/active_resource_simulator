@@ -4,14 +4,14 @@ module ActiveResource
     
     def initialize(model)
       @model = model
-      @simulations = []
+      @@simulations = []
     end
     
     attr_reader :model, :simulations
     
     
     def simulate_request(method, path, body=nil, options={})
-      @simulations << prepare_simulation(method, path, body, options)
+      @@simulations << prepare_simulation(method, path, body, options)
       load_simulations!
     end
     
@@ -72,7 +72,7 @@ module ActiveResource
     
     def load_simulations!
       ActiveResource::HttpMock.respond_to do |mock|
-        @simulations.each do |simulation|
+        @@simulations.each do |simulation|
           mock.send(*simulation)
         end
       end
